@@ -134,22 +134,36 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
       [useCaseBlogOutLine.contextInputs[0].keyLabel]: 'מנעולן באשדוד',
     },
   });
-  //console.log("outputs1:", outputs1);
-  // לקיחת את השבלונה של המאמר מי outputs1 בצורת HTML
-  const htmlContent = `<h1 style=";text-align:right;direction:rtl">נושא הבלוג:</h1><h3style=";text-align:right;direction:rtl"> המדריך האולטימטיבי למציאת המנעולנים הטובים ביותר באשדוד לכל צרכי הביטחון שלך</h3><h3 style=";text-align:right;direction:rtl"> מתווה הבלוג:</h3><h3 style=";text-align:right;direction:rtl"> הקדמה: מהו מנעולן ולמה צריך אחד כזה?</h3><p style=";text-align:right;direction:rtl"> <em>מילות מפתח: מנעולן, אשדוד, אבטחה, תיקון מנעולים)</em></p><h3 style=";text-align:right;direction:rtl"> סקירה של אשדוד ושירותי המנעולנות שלה</h3><p style=";text-align:right;direction:rtl"> <em>מילות מפתח: מנעולנים אשדוד, שירותי מנעולים באשדוד, מנעולן בקרבתי)</em></p><h3 style=";text-align:right;direction:rtl"> כיצד לבחור את המנעולן המתאים לצרכי האבטחה שלך</h3><p style=";text-align:right;direction:rtl"> <em>מילות מפתח: מנעולן חירום, מנעולן מורשה, מנעולן מבוטח)</em></p><h3 style=";text-align:right;direction:rtl"> 5 טיפים חיוניים בבחירת מנעולן באשדוד</h3><p style=";text-align:right;direction:rtl"> <em>מילות מפתח: איך למצוא מנעולן טוב, שירותי מנעולן אמין באשדוד, שירות תיקון מנעולים מוכר)</em></p><h3 style=";text-align:right;direction:rtl"> 5 מנעולנים בדירוג הגבוה ביותר באשדוד שכדאי לקחת בחשבון לעבודת תיקון המנעולים הבאה שלך</h3><p style=";text-align:right;direction:rtl"> <em>מילות מפתח: המפתח הטוב ביותר</em></p><p style=";text-align:right;direction:rtl"></p><p style="color: grey;text-align:right;direction:rtl"> <em>💡 טיפ: כדי לכתוב תוכן ידידותי לקידום אתרים, בחר כל כותרת מקטע יחד עם מילות מפתח והשתמש באפשרות &quot;פסקה&quot; מהרצועה. יותר תיאורי הכותרות עם מילות מפתח, יותר טוב.</em> <a href='https://rytr.me/resources#how-to-write-long-form-blogs-amp-articles-using-rytr'><em>למידע נוסף →</em></a></p> `;
+  //console.log(outputs1);
+
+
+  //הכנסת תבנית של התקבלה בהדפסה למעלה בצורת HTML
+  const htmlContent = `<h1 style="text-align:right;direction:rtl">נושא הבלוג:</h1><h3 style="text-align:right;direction:rtl"> המדריך האולטימטיבי למציאת המנעולנים הטובים ביותר באשדוד לכל צרכי הביטחון שלך</h3><h3 style="text-align:right;direction:rtl"> מתווה הבלוג:</h3><h3 style="text-align:right;direction:rtl"> הקדמה: מהו מנעולן ולמה צריך אחד כזה?</h3><p style="text-align:right;direction:rtl"> <em>מילות מפתח: מנעולן, אשדוד, אבטחה, תיקון מנעולים)</em></p><h3 style="text-align:right;direction:rtl"> סקירה של אשדוד ושירותי המנעולנות שלה</h3><p style="text-align:right;direction:rtl"> <em>מילות מפתח: מנעולנים אשדוד, שירותי מנעולים באשדוד, מנעולן בקרבתי)</em></p><h3 style="text-align:right;direction:rtl"> כיצד לבחור את המנעולן המתאים לצרכי האבטחה שלך</h3><p style="text-align:right;direction:rtl"> <em>מילות מפתח: מנעולן חירום, מנעולן מורשה, מנעולן מבוטח)</em></p><h3 style="text-align:right;direction:rtl"> 5 טיפים חיוניים בבחירת מנעולן באשדוד</h3><p style="text-align:right;direction:rtl"> <em>מילות מפתח: איך למצוא מנעולן טוב, שירותי מנעולן אמין באשדוד, שירות תיקון מנעולים מוכר)</em></p><h3 style="text-align:right;direction:rtl"> 5 מנעולנים בדירוג הגבוה ביותר באשדוד שכדאי לקחת בחשבון לעבודת תיקון המנעולים הבאה שלך</h3><p style="text-align:right;direction:rtl"> <em>מילות מפתח: המפתח הטוב ביותר</em></p><p style="text-align:right;direction:rtl"></p><p style="color: grey;text-align:right;direction:rtl"> <em>💡 טיפ: כדי לכתוב תוכן ידידותי לקידום אתרים, בחר כל כותרת מקטע יחד עם מילות מפתח והשתמש באפשרות &quot;פסקה&quot; מהרצועה. יותר תיאורי הכותרות עם מילות מפתח, יותר טוב.</em> <a href='https://rytr.me/resources#how-to-write-long-form-blogs-amp-articles-using-rytr'><em>למידע נוסף →</em></a></p>`;
   
-  const regex = /<h3 style="[\s\S]*?>([\s\S]*?)<[\s\S]*?<p style="[\s\S]*?>\W....([\s\S]*?)</g;
-  const regexP = /<p style="[\s\S]*?>\W....([\s\S]*?)</g;
-  const regexH1 = /<h1 style="[\s\S]*?([\s\S]*?)<\b/;
- 
+  //תבנית של ה - HTML המתקבל למעלה 
+  const regexH3 = /<h3 style="[\s\S]*?>[\s\S]*?([\s\S]*?)<[\s\S]*?<em>[\s\S]*?([\s\S]*?)<\/em>/g;
+  
+  
+  //הסרת פסקאות לא רציות 
+  const regexLinkRemove = /<p style="color[^"]*">([\s\S]*?)<\/p>/g;
+  const regexH1Remove = /<h1 style="[^"]*">([\s\S]*?)<\/h1>/g;
+  const regexH3Remove = /<h3 style="text-align:right;direction:rtl"> מתווה הבלוג:<\/h3>/i;
+  
+  let modifiedContent = htmlContent.replace(regexH1Remove, '');
+  modifiedContent = modifiedContent.replace(regexH3Remove, '');
+  modifiedContent = modifiedContent.replace(regexLinkRemove, '');
   
   let match;
-  let index = 1;
-  let st = "";
-  while ((match = regex.exec(htmlContent)) !== null) {
+  
+  
+  const numIterations = 500; // התאם את מספר האיטרציות לפי הצורך
+const matches = modifiedContent.matchAll(regexH3);
+//לולאות העוברות על כל תבנית ה REGEX ומדפיסה אותה 
+for (let i = 0; i < numIterations; i++) {
+  for (const match of matches) {
     const head = match[1].trim();
     const words = match[2].trim();
-  
+
     const outputs = await ryte({
       languageId: languageIdHebrew,
       toneId: toneIdInformative,
@@ -159,19 +173,44 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
         [useCaseBlogSection.contextInputs[1].keyLabel]: words,
       },
     });
-    st += outputs[0].text;
-  
-    index++;
+
+    const modifiedParagraph = outputs[0].text;
+    modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
   }
+}
+
+// לאפס את האינדקס של regex
+regexH3.lastIndex = 0; 
+
+let index = 1;
+
+  while ((match = regexH3.exec(modifiedContent)) !== null) {
+    const head = match[1].trim();
+    const words = match[2].trim();
+
+    const outputs = await ryte({
+    languageId: languageIdHebrew,
+    toneId: toneIdInformative,
+    useCaseId: useCaseBlogSectionWritingId,
+    inputContexts: {
+      [useCaseBlogSection.contextInputs[0].keyLabel]: head,
+      [useCaseBlogSection.contextInputs[1].keyLabel]: words,
+    },
+  });
+
+  const modifiedParagraph = outputs[0].text;
+  modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
+
+  index += 2;
+}
   
-  let modifiedHtmlContent = htmlContent.replace(regexH1, '');
-  modifiedHtmlContent = modifiedHtmlContent.replace(regexP, `<p>${st}`);
-  fs.writeFile('modified.html', modifiedHtmlContent, (err) => {
+ //שמירת הפלט בצורה מקומית
+  fs.writeFile('מנעולן באשדוד.html', modifiedContent, (err) => {
     if (err) {
       console.error('Error saving the modified HTML:', err);
     } else {
       console.log('Modified HTML content saved successfully!');
     }
-  });}
-
+  });
+}
 generateContent();
