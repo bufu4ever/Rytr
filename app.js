@@ -142,28 +142,23 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
   
   //תבנית של ה - HTML המתקבל למעלה 
   const regexH3 = /<h3 style="[\s\S]*?>[\s\S]*?([\s\S]*?)<[\s\S]*?<em>[\s\S]*?([\s\S]*?)<\/em>/g;
-  
-  
-  //הסרת פסקאות לא רציות 
+
+  // מחיקת פסקאות לא רצויות
   const regexLinkRemove = /<p style="color[^"]*">([\s\S]*?)<\/p>/g;
   const regexH1Remove = /<h1 style="[^"]*">([\s\S]*?)<\/h1>/g;
   const regexH3Remove = /<h3 style="text-align:right;direction:rtl"> מתווה הבלוג:<\/h3>/i;
   
-  let modifiedContent = htmlContent.replace(regexH1Remove, '');
-  modifiedContent = modifiedContent.replace(regexH3Remove, '');
-  modifiedContent = modifiedContent.replace(regexLinkRemove, '');
+  let modifiedContent = htmlContent
+    .replace(regexH1Remove, '')
+    .replace(regexH3Remove, '')
+    .replace(regexLinkRemove, '');
   
-  let match;
+  const matches = Array.from(modifiedContent.matchAll(regexH3));
   
-  
-  const numIterations = 500; // התאם את מספר האיטרציות לפי הצורך
-const matches = modifiedContent.matchAll(regexH3);
-//לולאות העוברות על כל תבנית ה REGEX ומדפיסה אותה 
-for (let i = 0; i < numIterations; i++) {
   for (const match of matches) {
     const head = match[1].trim();
     const words = match[2].trim();
-
+  
     const outputs = await ryte({
       languageId: languageIdHebrew,
       toneId: toneIdInformative,
@@ -173,44 +168,43 @@ for (let i = 0; i < numIterations; i++) {
         [useCaseBlogSection.contextInputs[1].keyLabel]: words,
       },
     });
-
+  
     const modifiedParagraph = outputs[0].text;
     modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
   }
-}
-
-// לאפס את האינדקס של regex
-regexH3.lastIndex = 0; 
-
-let index = 1;
-
+  
+  // אתחול לפני כניסה ללולאה
+  regexH3.lastIndex = 0;
+  
+  let match;
+  
   while ((match = regexH3.exec(modifiedContent)) !== null) {
     const head = match[1].trim();
     const words = match[2].trim();
-
-    const outputs = await ryte({
-    languageId: languageIdHebrew,
-    toneId: toneIdInformative,
-    useCaseId: useCaseBlogSectionWritingId,
-    inputContexts: {
-      [useCaseBlogSection.contextInputs[0].keyLabel]: head,
-      [useCaseBlogSection.contextInputs[1].keyLabel]: words,
-    },
-  });
-
-  const modifiedParagraph = outputs[0].text;
-  modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
-
-  index += 2;
-}
   
- //שמירת הפלט בצורה מקומית
-  fs.writeFile('מנעולן באשדוד.html', modifiedContent, (err) => {
+    const outputs = await ryte({
+      languageId: languageIdHebrew,
+      toneId: toneIdInformative,
+      useCaseId: useCaseBlogSectionWritingId,
+      inputContexts: {
+        [useCaseBlogSection.contextInputs[0].keyLabel]: head,
+        [useCaseBlogSection.contextInputs[1].keyLabel]: words,
+      },
+    });
+  
+    const modifiedParagraph = outputs[0].text;
+    modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
+  
+  }
+  // שמירת הקובץ בצורה מקומית 
+  fs.writeFile('locksmith.html', modifiedContent, (err) => {
     if (err) {
       console.error('Error saving the modified HTML:', err);
     } else {
       console.log('Modified HTML content saved successfully!');
     }
   });
+  
+
 }
 generateContent();
