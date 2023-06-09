@@ -118,11 +118,11 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
 }
 // פונקציה שמגרילה שבלונה של מאמר על פי מילת מפתח
 ;async function generateContent() {
-  const languageIdHebrew = '607c7c211ebe15000cbbc7b8';
+  let languageIdHebrew = '607c7c211ebe15000cbbc7b8';
   const useCaseBlogOutLineIdeaId = '60a40cf5da9d76000ccc2828';
   const useCaseBlogSectionWritingId = '60584cf2c2cdaa000c2a7954';
-  const toneIdInformative = '60ff8d3afc873e000c08e8b2';
-  const ContinueRytingId = '6223abf9ea8eb61e65b4e691';
+  let toneIdInformative = '60ff8d3afc873e000c08e8b2';
+  let ContinueRytingId = '6223abf9ea8eb61e65b4e691';
 
   const useCaseBlogOutLine = await useCaseDetail({ useCaseId: useCaseBlogOutLineIdeaId });
   const useCaseBlogSection = await useCaseDetail({ useCaseId: useCaseBlogSectionWritingId });
@@ -143,69 +143,45 @@ async function ryte({ languageId, toneId, useCaseId, inputContexts }) {
   //תבנית של ה - HTML המתקבל למעלה 
   const regexH3 = /<h3 style="[\s\S]*?>[\s\S]*?([\s\S]*?)<[\s\S]*?<em>[\s\S]*?([\s\S]*?)<\/em>/g;
 
+
   // מחיקת פסקאות לא רצויות
   const regexLinkRemove = /<p style="color[^"]*">([\s\S]*?)<\/p>/g;
   const regexH1Remove = /<h1 style="[^"]*">([\s\S]*?)<\/h1>/g;
   const regexH3Remove = /<h3 style="text-align:right;direction:rtl"> מתווה הבלוג:<\/h3>/i;
   
-  let modifiedContent = htmlContent
-    .replace(regexH1Remove, '')
-    .replace(regexH3Remove, '')
-    .replace(regexLinkRemove, '');
-  
-  const matches = Array.from(modifiedContent.matchAll(regexH3));
-  
-  for (const match of matches) {
-    const head = match[1].trim();
-    const words = match[2].trim();
-  
-    const outputs = await ryte({
-      languageId: languageIdHebrew,
-      toneId: toneIdInformative,
-      useCaseId: useCaseBlogSectionWritingId,
-      inputContexts: {
-        [useCaseBlogSection.contextInputs[0].keyLabel]: head,
-        [useCaseBlogSection.contextInputs[1].keyLabel]: words,
-        
-      },
-      
-    });
-    const modifiedParagraph = outputs[0].text;
-    modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
+  const titles = [];
+const keywords = [];
+
+const titleRegex = /<h3 style="[\s\S]*?>([\s\S]*?)<\/h3>/g;
+const keywordRegex = /<em>[\s\S]*?([\s\S]*?)<\/em>/g;
+
+let match;
+
+while ((match = titleRegex.exec(htmlContent)) !== null) {
+  titles.push(match[1]);
+}
+
+while ((match = keywordRegex.exec(htmlContent)) !== null) {
+  keywords.push(match[1]);
+}
+
+const titleKeywordsMap = {};
+
+for (let i = 0; i < titles.length; i++) {
+  const title = titles[i];
+  const keyword = keywords[i] || '';
+
+  if (titleKeywordsMap.hasOwnProperty(title)) {
+    titleKeywordsMap[title].push(keyword);
+  } else {
+    titleKeywordsMap[title] = [keyword];
   }
+}
+
+console.log(titleKeywordsMap);
+
   
-  // אתחול לפני כניסה ללולאה
-  regexH3.lastIndex = 0;
-  
-  let match;
-  
-  // while ((match = regexH3.exec(modifiedContent)) !== null) {
-  //   const head = match[1].trim();
-  //   const words = match[2].trim();
-  
-  //   const outputs = await ryte({
-  //     languageId: languageIdHebrew,
-  //     toneId: toneIdInformative,
-  //     useCaseId: ContinueRytingId,
-  //     inputContexts: {
-  //       [useCaseBlogSection.contextInputs[0].keyLabel]: head,
-  //       [useCaseBlogSection.contextInputs[1].keyLabel]: words,
-  //     },
-  //   });
-  
-  //   const modifiedParagraph = outputs[0].text;
-  //   modifiedContent = modifiedContent.replace(match[2], `<em>${modifiedParagraph}</em>`);
-  
-  // }
-  // שמירת הקובץ בצורה מקומית 
-  fs.writeFile('locksmith.html', modifiedContent, (err) => {
-    if (err) {
-      console.error('Error saving the modified HTML:', err);
-    } else {
-      console.log('Modified HTML content saved successfully!');
-    }
-  });
-  
+
 
 }
 generateContent();
